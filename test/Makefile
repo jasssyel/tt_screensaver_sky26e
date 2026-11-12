@@ -1,34 +1,21 @@
 # SPDX-FileCopyrightText: © 2024 Tiny Tapeout
 # SPDX-License-Identifier: Apache-2.0
 
-import os
-from cocotb_tools.runner import get_runner
+SIM ?= icarus
+TOPLEVEL_LANG ?= verilog
 
-def test_runner():
-    runner = get_runner("icarus")
-    
-    # Compilación indicando la ruta correcta hacia la carpeta src/
-    runner.build(
-        sources=[
-            os.path.join("../src", "project.v"),
-            os.path.join("../src", "hvsync_generator.v"),
-            os.path.join("../src", "bitmap_rom.v"),
-        ],
-        hdl_toplevel="tt_um_tt_screensaver_project",
-        waves=True,
-    )
-    
-    # Ejecución del testbench indicando que el módulo de pruebas es test.py
-    # y forzando la salida del results.xml donde GitHub Actions lo espera
-    runner.test(
-        hdl_toplevel="tt_um_tt_screensaver_project",
-        test_module="test",  # Apunta al archivo test.py que contiene el @cocotb.test()
-        waves=True,
-        extra_env={
-            "PYTHONPATH": os.path.abspath("."),
-            "COCOTB_RESULTS_FILE": "results.xml"
-        },
-    )
+# Rutas hacia la carpeta src donde están tus fuentes de Verilog
+SRC_DIR = $(PWD)/../src
+PROJ_SOURCES = project.v hvsync_generator.v bitmap_rom.v
 
-if __name__ == "__main__":
-    test_runner()
+# Archivos que se van a compilar (incluyendo el testbench tb.v)
+VERILOG_SOURCES = $(addprefix $(SRC_DIR)/,$(PROJ_SOURCES)) tb.v
+
+# Top level del módulo de pruebas (debe coincidir con el nombre en tb.v)
+TOPLEVEL = tb
+
+# Módulo de Python que contiene las pruebas con @cocotb.test()
+MODULE = test
+
+# Incluir las reglas estándar de cocotb para la simulación
+include $(shell cocotb-config --makefiles)/Makefile.sim
