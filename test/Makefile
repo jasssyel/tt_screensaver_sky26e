@@ -7,7 +7,7 @@ def test_runner():
     # Compilación de todos los módulos del diseño
     runner.build(
         sources=["project.v", "hvsync_generator.v", "bitmap_rom.v"],
-        hdl_toplevel="tt_um_vga_example",
+        hdl_toplevel="tt_um_tt_screensaver_project",
         waves=True,  # Activa la generación de ondas (.fst / .vcd)
     )
     
