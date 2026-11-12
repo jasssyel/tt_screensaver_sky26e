@@ -1,33 +1,49 @@
-# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
-# SPDX-License-Identifier: Apache-2.0
+`default_nettype none
+`timescale 1ns / 1ps
 
-import os
-from cocotb_tools.runner import get_runner
+/* This testbench just instantiates the module and makes some convenient wires
+   that can be driven / tested by the cocotb test.py.
+*/
+module tb ();
 
-def test_runner():
-    runner = get_runner("icarus")
-    
-    # Compilación de los archivos fuente del proyecto ubicados en la carpeta src/
-    runner.build(
-        sources=[
-            os.path.join("../src", "project.v"),
-            os.path.join("../src", "hvsync_generator.v"),
-            os.path.join("../src", "bitmap_rom.v"),
-        ],
-        hdl_toplevel="tt_um_tt_screensaver_project",
-        waves=True,
-    )
-    
-    # Ejecución del testbench indicando el test_module y forzando la salida del XML
-    runner.test(
-        hdl_toplevel="tt_um_tt_screensaver_project",
-        test_module="test",  # Coincide con tu archivo test.py
-        waves=True,
-        extra_env={
-            "PYTHONPATH": os.path.abspath("."),
-            "COCOTB_RESULTS_FILE": "results.xml"
-        },
-    )
+  // Dump the signals to a FST file. You can view it with gtkwave or surfer.
+  initial begin
+    $dumpfile("tb.fst");
+    $dumpvars(0, tb);
+    #1;
+  end
 
-if __name__ == "__main__":
-    test_runner()
+  // Wire up the inputs and outputs:
+  reg clk;
+  reg rst_n;
+  reg ena;
+  reg [7:0] ui_in;
+  reg [7:0] uio_in;
+  wire [7:0] uo_out;
+  wire [7:0] uio_out;
+  wire [7:0] uio_oe;
+`ifdef GL_TEST
+  wire VPWR = 1'b1;
+  wire VGND = 1'b0;
+`endif
+
+  // Replace tt_um_example with your module name:
+  tt_um_tt_screensaver_project example user_project (
+
+      // Include power ports for the Gate Level test:
+`ifdef GL_TEST
+      .VPWR(VPWR),
+      .VGND(VGND),
+`endif
+
+      .ui_in  (ui_in),    // Dedicated inputs
+      .uo_out (uo_out),   // Dedicated outputs
+      .uio_in (uio_in),   // IOs: Input path
+      .uio_out(uio_out),  // IOs: Output path
+      .uio_oe (uio_oe),   // IOs: Enable path (active high: 0=input, 1=output)
+      .ena    (ena),      // enable - goes high when design is selected
+      .clk    (clk),      // clock
+      .rst_n  (rst_n)     // not reset
+  );
+
+endmodule
