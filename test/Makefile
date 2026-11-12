@@ -1,22 +1,33 @@
+# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
+# SPDX-License-Identifier: Apache-2.0
+
 import os
 from cocotb_tools.runner import get_runner
 
 def test_runner():
     runner = get_runner("icarus")
     
-    # Compilación de todos los módulos del diseño
+    # Compilación indicando la ruta correcta hacia la carpeta src/
     runner.build(
-        sources=["project.v", "hvsync_generator.v", "bitmap_rom.v"],
+        sources=[
+            os.path.join("../src", "project.v"),
+            os.path.join("../src", "hvsync_generator.v"),
+            os.path.join("../src", "bitmap_rom.v"),
+        ],
         hdl_toplevel="tt_um_tt_screensaver_project",
-        waves=True,  # Activa la generación de ondas (.fst / .vcd)
+        waves=True,
     )
     
-    # Ejecución del testbench indicando la ruta absoluta del directorio actual
+    # Ejecución del testbench indicando que el módulo de pruebas es test.py
+    # y forzando la salida del results.xml donde GitHub Actions lo espera
     runner.test(
         hdl_toplevel="tt_um_tt_screensaver_project",
-        test_module="tb",
+        test_module="test",  # Apunta al archivo test.py que contiene el @cocotb.test()
         waves=True,
-        extra_env={"PYTHONPATH": os.path.abspath(".")},
+        extra_env={
+            "PYTHONPATH": os.path.abspath("."),
+            "COCOTB_RESULTS_FILE": "results.xml"
+        },
     )
 
 if __name__ == "__main__":
