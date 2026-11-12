@@ -1,6 +1,8 @@
 `default_nettype none
 
-module bitmap_rom (
+module bitmap_rom #(
+    parameter FRAMES = 2
+) (
     input  wire [6:0] x, // Coordenada X dentro del logo (0 a 127)
     input  wire [6:0] y, // Coordenada Y dentro del logo (0 a 79)
     output reg        pixel
@@ -36,7 +38,7 @@ module bitmap_rom (
   // 5. Cruz blanca central (en el centro exacto de 64x64)
   wire cross_v = (lx >= 6'd28 && lx <= 6'd35) && (ly >= 6'd20 && ly <= 6'd43);
   wire cross_h = (ly >= 6'd28 && ly <= 6'd35) && (lx >= 6'd20 && lx <= 6'd43);
-  wire is_cross = cross_v || cross_h; // Renombrado a is_cross para evitar conflicto
+  wire is_cross = cross_v || cross_h;
 
   always @(*) begin
     if (!in_bounds) begin
@@ -58,6 +60,6 @@ module bitmap_rom (
   end
 
   // Bit de guarda para evitar advertencias por variables no usadas
-  wire _unused = &{x[6], y[6]};
+  wire _unused = &{x[6], y[6], FRAMES[0]};
 
 endmodule
