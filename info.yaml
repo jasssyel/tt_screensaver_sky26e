@@ -1,6 +1,6 @@
 # Tiny Tapeout project information
 project:
-  title:        "tt_screensaver_project"      # Project title
+  title:        "tt_um_tt_screensaver_project"      # Project title
   author:       "Kevin Martinez, Emilio Cruz, Salvador Pineda"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
   description:  "VGA screensaver bouncing logos (Batman and Superman)"      # One line description of what your project does
