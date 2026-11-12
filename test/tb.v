@@ -3,7 +3,7 @@ from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, Timer
 
 @cocotb.test()
-async def test_tt_um_vga_example(dut):
+async def tt_um_tt_screensaver_project(dut):
     """
     Testbench para verificar el proyecto VGA tt_um_vga_example
     """
