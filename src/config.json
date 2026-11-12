@@ -1,5 +1,5 @@
 {
-  "DESIGN_NAME": "tt_screensaver_project",
+  "DESIGN_NAME": "tt_um_tt_screensaver_project",
   "VERILOG_FILES": [
     "dir::project.v",
     "dir::hvsync_generator.v",
