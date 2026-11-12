@@ -14,7 +14,7 @@ def test_runner():
     # Ejecución del testbench indicando la ruta absoluta del directorio actual
     runner.test(
         hdl_toplevel="tt_um_tt_screensaver_project",
-        test_module="project_tb",
+        test_module="tb.v",
         waves=True,
         extra_env={"PYTHONPATH": os.path.abspath(".")},
     )
