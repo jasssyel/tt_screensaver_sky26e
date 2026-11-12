@@ -24,7 +24,7 @@ def test_runner():
         hdl_toplevel="tt_um_tt_screensaver_project",
         test_module="test", // # Busca el archivo test.py
         waves=True,
-        extra_env={"PYTHONPATH": os.path.abspath(".")},
+       extra_env={"PYTHONPATH": os.path.abspath("."), "COCOTB_RESULTS_FILE": "results.xml"},
     )
 
 if __name__ == "__main__":
