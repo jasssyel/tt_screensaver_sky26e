@@ -1,23 +1,18 @@
-import os
-from cocotb_tools.runner import get_runner
+# Makefile de integración para Cocotb en Tiny Tapeout
 
-def test_runner():
-    runner = get_runner("icarus")
-    
-    # Compilación de todos los módulos del diseño
-    runner.build(
-        sources=["project.v", "hvsync_generator.v", "bitmap_rom.v"],
-        hdl_toplevel="tt_um_tt_screensaver_project",
-        waves=True,  # Activa la generación de ondas (.fst / .vcd)
-    )
-    
-    # Ejecución del testbench indicando la ruta absoluta del directorio actual
-    runner.test(
-        hdl_toplevel="tt_um_tt_screensaver_project",
-        test_module="project_tb",
-        waves=True,
-        extra_env={"PYTHONPATH": os.path.abspath(".")},
-    )
+SIM ?= icarus
+TOPLEVEL_LANG ?= verilog
 
-if __name__ == "__main__":
-    test_runner()
+# Nombre de tu archivo de pruebas en Python (sin la extensión .py)
+MODULE ?= test
+
+# Módulo principal de tu diseño en Verilog
+TOPLEVEL ?= tt_um_tt_screensaver_project
+
+# Archivos fuente del proyecto ubicados en src/
+VERILOG_SOURCES += $(PWD)/../src/project.v
+VERILOG_SOURCES += $(PWD)/../src/hvsync_generator.v
+VERILOG_SOURCES += $(PWD)/../src/bitmap_rom.v
+
+# Incluir las reglas comunes de cocotb para compilar y ejecutar
+include $(shell cocotb-config --makefiles)/Makefile.sim
