@@ -1,20 +1,18 @@
-<!---
 
-This file is used to generate your project datasheet. Please fill in the information below and delete any unused
-sections.
-
-You can also include images in this folder and reference them in the markdown. Each image must be less than
-512 kb in size, and the combined size of all images must be less than 1 MB.
--->
 
 ## How it works
 
-Explain how your project works
+This project implements a classic DVD-style bouncing screensaver on a standard VGA display (640x480 @ 60Hz), tailored for the Tiny Tapeout hardware architecture. It features alternating dynamic logos (Batman and Superman silhouettes with custom pixel ROM bitmaps) moving across the screen and bouncing off the borders.
 
-## How to test
+## Features
 
-Explain how to use your project
+- **Bouncing Animation:** Smooth position updates synchronized with vertical sync (`vsync`), reversing direction upon hitting the display boundaries.
+- **Logo Alternating Timer:** Automatically transitions between the Batman and Superman icon bitmaps at configurable frame intervals.
+- **Dynamic RGB Color Cycling:** Generates smooth, shifting color transitions across the spectrum for the logo pixels.
+- **Configurable Inputs (`ui_in`):**
+  - `ui_in[0]`: Enables a full-screen mosaic pattern repeating the logo.
+  - `ui_in[1]`: Switches the display to a fixed solid yellow color mode.
 
-## External hardware
+## External Hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+- **VGA PMOD:** Connected to the dedicated output pins (`uo_out`) following the TinyVGA standard (utilizing 2 bits per color channel for R, G, B plus HSync and VSync).
