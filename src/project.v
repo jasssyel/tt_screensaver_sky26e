@@ -13,7 +13,7 @@ parameter LOGO_H = 90;           // Alto del logo en pixeles
 parameter DISPLAY_WIDTH = 640;   // Ancho VGA
 parameter DISPLAY_HEIGHT = 480;  // Alto VGA
 
-module tt_screensaver_project (
+module tt_um_tt_screensaver_project (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
