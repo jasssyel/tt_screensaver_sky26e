@@ -1,38 +1,31 @@
-import cocotb
-from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, Timer
+# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
+# SPDX-License-Identifier: Apache-2.0
 
-@cocotb.test()
-async def tt_um_tt_screensaver_project(dut):
-    """
-    Testbench para verificar el proyecto VGA tt_um_vga_example
-    """
-    # 1. Iniciar reloj principal (periodo de 10 ns -> 100 MHz)
-    clock = Clock(dut.clk, 10, unit="ns")
-    cocotb.start_soon(clock.start())
+import os
+from cocotb_tools.runner import get_runner
 
-    # 2. Inicializar señales de control y entradas (Reset activo en bajo: rst_n)
-    dut.rst_n.value = 0
-    dut.ena.value = 1
-    dut.ui_in.value = 0
-    dut.uio_in.value = 0
+def test_runner():
+    # Seleccionamos el simulador Icarus Verilog
+    runner = get_runner("icarus")
+    
+    # Compilamos los archivos fuente del proyecto ubicados en ../src/
+    runner.build(
+        sources=[
+            os.path.join("../src", "project.v"),
+            os.path.join("../src", "hvsync_generator.v"),
+            os.path.join("../src", "bitmap_rom.v"),
+        ],
+        hdl_toplevel="tt_um_tt_screensaver_project",
+        waves=True,  # Habilita la generación de ondas (.vcd / .fst)
+    )
+    
+    # Ejecutamos las pruebas definidas en test.py
+    runner.test(
+        hdl_toplevel="tt_um_tt_screensaver_project",
+        test_module="test",  # Busca el archivo test.py
+        waves=True,
+        extra_env={"PYTHONPATH": os.path.abspath(".")},
+    )
 
-    await Timer(100, unit="ns")
-
-    # Liberar el reset
-    await RisingEdge(dut.clk)
-    dut.rst_n.value = 1
-    dut._log.info("Reset liberado. Iniciando simulación del proyecto VGA...")
-
-    # 3. Probar cambios en las entradas de configuración (ui_in)
-    await Timer(50, unit="us")
-    dut.ui_in.value = 2  # Activa modo amarillo
-    dut._log.info("Cambiando a modo amarillo...")
-
-    await Timer(50, unit="us")
-    dut.ui_in.value = 1  # Activa modo tile
-    dut._log.info("Cambiando a modo tile...")
-
-    # 4. Dejar correr la simulación para capturar ondas suficientes
-    await Timer(100, unit="us")
-    dut._log.info("Simulación finalizada exitosamente.")
+if __name__ == "__main__":
+    test_runner()
