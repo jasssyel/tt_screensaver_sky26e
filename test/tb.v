@@ -1,14 +1,14 @@
-# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
-# SPDX-License-Identifier: Apache-2.0
+//# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
+//# SPDX-License-Identifier: Apache-2.0
 
 import os
 from cocotb_tools.runner import get_runner
 
 def test_runner():
-    # Seleccionamos el simulador Icarus Verilog
+   // # Seleccionamos el simulador Icarus Verilog
     runner = get_runner("icarus")
     
-    # Compilamos los archivos fuente del proyecto ubicados en ../src/
+  //  # Compilamos los archivos fuente del proyecto ubicados en ../src/
     runner.build(
         sources=[
             os.path.join("../src", "project.v"),
@@ -16,13 +16,13 @@ def test_runner():
             os.path.join("../src", "bitmap_rom.v"),
         ],
         hdl_toplevel="tt_um_tt_screensaver_project",
-        waves=True,  # Habilita la generación de ondas (.vcd / .fst)
+        waves=True,  //# Habilita la generación de ondas (.vcd / .fst)
     )
     
-    # Ejecutamos las pruebas definidas en test.py
+   // # Ejecutamos las pruebas definidas en test.py
     runner.test(
         hdl_toplevel="tt_um_tt_screensaver_project",
-        test_module="test",  # Busca el archivo test.py
+        test_module="test", // # Busca el archivo test.py
         waves=True,
         extra_env={"PYTHONPATH": os.path.abspath(".")},
     )
